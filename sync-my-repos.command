@@ -42,6 +42,25 @@ label() {
 }
 note() { echo "  • $1" >> "$WORK/problems"; }
 
+# Turn git's actual error into plain English. Never guess at a cause —
+# a wrong explanation sends you chasing the wrong fix.
+explain() {
+  case "$1" in
+    *Authentication*|*"could not read Username"*|*"Permission denied"*|*"access rights"*|*"terminal prompts disabled"*)
+      echo "GitHub wouldn't let us in. Sign in to GitHub on this Mac, then run this again." ;;
+    *"Could not resolve host"*|*"unable to access"*|*"Connection refused"*|*"timed out"*)
+      echo "couldn't reach GitHub. Check your internet and run this again." ;;
+    *"already exists"*)
+      echo "there's already a folder with that name that isn't linked to GitHub. Rename it, then run this again." ;;
+    *"Repository not found"*|*"not found"*)
+      echo "GitHub says this project doesn't exist any more, or your account can't see it." ;;
+    *"non-fast-forward"*|*"fetch first"*|*rejected*)
+      echo "GitHub has newer work than this Mac does. Run this again and it should sort itself out." ;;
+    *)
+      echo "GitHub said: $(printf '%s' "$1" | grep -v -e '^Cloning' -e '^To ' -e '^remote:' | head -1)" ;;
+  esac
+}
+
 clear
 echo
 echo "${bold}Syncing your GitHub projects${rst}   ${dim}$STAMP${rst}"
@@ -161,21 +180,21 @@ while IFS= read -r gitdir; do
 
   # 3. Upload.
   if [ "$has_upstream" = "no" ]; then
-    if git -C "$d" push -q -u origin "$branch" >/dev/null 2>&1; then
+    if perr="$(git -C "$d" push -u origin "$branch" 2>&1)"; then
       did="${did:+$did, }uploaded"
     else
       echo "${red}couldn't upload${rst}"
-      note "$name — GitHub wouldn't accept the upload. You may not have permission to write to this one."
+      note "$name — $(explain "$perr")"
       continue
     fi
   else
     outgoing="$(git -C "$d" rev-list --count '@{u}..HEAD' 2>/dev/null)"
     if [ "${outgoing:-0}" -gt 0 ]; then
-      if git -C "$d" push -q >/dev/null 2>&1; then
+      if perr="$(git -C "$d" push 2>&1)"; then
         did="${did:+$did, }uploaded"
       else
         echo "${red}couldn't upload${rst}"
-        note "$name — GitHub wouldn't accept the upload. Try running this again in a minute."
+        note "$name — $(explain "$perr")"
         continue
       fi
     fi
@@ -211,11 +230,17 @@ if [ -n "$MISSING" ]; then
     else
       remote="https://github.com/$slug.git"
     fi
-    if git -C "$CLONE_INTO" clone --quiet "$remote" >/dev/null 2>&1; then
+    # Read what git actually says rather than guessing at the reason.
+    if err="$(git -C "$CLONE_INTO" clone "$remote" 2>&1)"; then
       echo "${grn}downloaded${rst}"
     else
       echo "${red}couldn't download${rst}"
-      note "$short — couldn't download it. It's private, so you may need to sign in to GitHub on this Mac first."
+      case "$err" in
+        *"already exists"*)
+          note "$short — there's already a folder called '$short' in Documents that isn't linked to GitHub. Rename it (say, '$short-old'), then run this again." ;;
+        *)
+          note "$short — $(explain "$err")" ;;
+      esac
     fi
   done
 fi
