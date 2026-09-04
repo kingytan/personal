@@ -14,8 +14,9 @@ bold=$'\033[1m'; dim=$'\033[2m'; grn=$'\033[32m'; ylw=$'\033[33m'; red=$'\033[31
 # Folders to look in. Add your own here if your projects live somewhere else.
 SEARCH_DIRS="$HOME/Documents $HOME/Desktop $HOME/Developer $HOME/Projects $HOME/Code $HOME/repos $HOME/git $HOME/src"
 
-# Everything on your GitHub account, so we can spot anything not yet on this Mac.
-ALL_REPOS="kingytan/personal
+# Used only when GitHub cannot be asked directly. Any repo you create after
+# this date is missing from it, which is exactly the bug live discovery fixes.
+FALLBACK_REPOS="kingytan/personal
 kingytan/kingtan-com-au
 kingytan/LLM-Wiki
 kingytan/Business
@@ -26,7 +27,19 @@ kingytan/ellies-reading-quest
 kingytan/shutter-beast-joey
 kingytan/digi-flyer-qc
 kingytan/sveltia-cms-auth
-kingytan/project"
+kingytan/project
+kingytan/agents
+kingytan/metcash"
+
+DISCOVERY="fallback"
+
+# Ask GitHub what you own, so a repo made this morning is found this morning.
+discover_repos() {
+  command -v gh >/dev/null 2>&1 || return 1
+  out="$(gh repo list --limit 200 --json nameWithOwner --jq '.[].nameWithOwner' 2>/dev/null)"
+  [ -n "$out" ] || return 1
+  printf '%s\n' "$out"
+}
 
 STAMP="$(date '+%Y-%m-%d %H:%M')"
 WORK="$(mktemp -d)"
@@ -207,6 +220,12 @@ done < "$WORK/dirs"
 CLONE_STYLE=https
 [ -s "$WORK/style" ] && CLONE_STYLE=ssh
 
+if ALL_REPOS="$(discover_repos)"; then
+  DISCOVERY="live"
+else
+  ALL_REPOS="$FALLBACK_REPOS"
+fi
+
 MISSING=""
 for slug in $ALL_REPOS; do
   a="$(echo "$slug" | tr '[:upper:]' '[:lower:]')"
@@ -254,6 +273,17 @@ if [ -s "$WORK/problems" ]; then
   echo "${dim}  Nothing was deleted or overwritten in any of them.${rst}"
 else
   echo "${grn}${bold}All done — everything is in sync.${rst}"
+fi
+
+# Say plainly when the repo list is a stale snapshot, because the failure is
+# silent otherwise: a new repo simply never appears and nothing looks wrong.
+if [ "$DISCOVERY" = "fallback" ]; then
+  echo
+  echo "${ylw}Working from a saved list of your projects, not a live one.${rst}"
+  echo "${dim}  Anything you created on GitHub recently will not be found."
+  echo "  To fix it for good, run these two once:"
+  echo "    brew install gh"
+  echo "    gh auth login${rst}"
 fi
 
 echo
