@@ -23,7 +23,7 @@ into each repo, never installed as a plugin.
 
 | Skill | What it does | Call it | Lives in | By |
 |---|---|---|---|---|
-| `stop-slop` | Strips the tells out of writing: filler openers, adverbs, passive voice, binary contrasts, em dashes. Rewrites; it does not search. | `/stop-slop` | 13 of 15 repos | [Hardik Pandya](https://github.com/hardikpandya/stop-slop) (MIT) |
+| `stop-slop` | Strips the tells out of writing: filler openers, adverbs, passive voice, binary contrasts, em dashes. Rewrites; it does not search. | `/stop-slop` | All 15 repos | [Hardik Pandya](https://github.com/hardikpandya/stop-slop) (MIT) |
 | `slop-scan` | Greps a repo's copy and reports every tell as file and line number. Finds the lines; stop-slop fixes them. | `/slop-scan` | claude-code, kingtan-com-au | Yours, built 19 Aug 2026 |
 | `i-have-adhd` | Reshapes the answer: next action first, numbered steps, no preamble, no recap, lists capped at five. Ends on "stop adhd mode". | `/i-have-adhd` | claude-code, job-hunting, kingtan-com-au | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) (MIT) |
 | `frontend-design` | Visual direction for new UI: palette, type pairing, layout, and the discipline to avoid templated defaults. Your one primary design skill. | `/frontend-design` | claude-code, kingtan-com-au | [Anthropic](https://github.com/anthropics/claude-plugins-official) |
@@ -32,9 +32,8 @@ into each repo, never installed as a plugin.
 | `kingtan-portfolio-entry` | Eleven step intake for new work on kingtan.com.au: blurb voice, locked service tags, image pipeline, SEO pass, redirects, screenshot checks. | `/kingtan-portfolio-entry` | kingtan-com-au | Yours |
 | `tbo-a0-posters` | Turns a Bottle-O A0 brief workbook into InDesign Data Merge CSVs, then proofreads the finished PDF against the brief. | `/tbo-a0-posters` | metcash | Yours |
 
-**stop-slop is in:** personal, claude-code, kingtan-com-au, job-hunting, LLM-Wiki,
-Business, Obsidian-Vault, agents, project, digi-flyer-qc, sveltia-cms-auth,
-shutter-beast-joey, ellies-reading-quest.
+**stop-slop is in all 15 repos** as of 12 September 2026. `metcash` and `vantage`
+were the last two and now carry it.
 
 ## Plugins on the Mac (2)
 
@@ -83,10 +82,10 @@ call them.
 
 ## Worth knowing
 
-- **Two repos have no writing rules.** `metcash` and `vantage` are the only ones
-  without a copy of stop-slop. Everything written in those sessions goes unchecked.
-- **vantage has no Claude setup at all.** It was created on 12 September 2026, so
-  this may be GitHub's search index catching up rather than a real gap.
+- **metcash still points at the wrong default branch.** It was built entirely on
+  `claude/*` session branches and never had a trunk. A `main` branch now exists, but
+  the repo default is still `claude/asana-setup-ud8ewy`. Change it under Settings,
+  Branches on GitHub so new work starts from main.
 - **i-have-adhd sits in 3 repos, frontend-design in 2.** Both are useful more widely.
 - **Installing is not loading.** A skill opens when you invoke it or when the work
   matches its description. Sitting in a folder does nothing on its own.
