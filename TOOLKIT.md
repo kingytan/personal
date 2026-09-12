@@ -12,10 +12,10 @@ Mac mini, and the claude.ai account.
 | Surface | Where it runs | What to know |
 |---|---|---|
 | **Repo** | Claude Code, opened in that project folder | Files committed to the repo. Travels with the project, to the Mac and to web sessions alike. Only loads for the repo it sits in. |
-| **Mac** | Claude Code in Terminal, on the Mac mini only | Marketplace plugins live in a folder git ignores. They resolve to nothing in a web session. This is why `grill-me` came back "Unknown command". |
+| **Mac** | Claude Code in Terminal, on the Mac mini only | Marketplace plugins live in a folder git ignores. They resolve to nothing in a web session. |
 | **Web** | claude.ai, desktop app, phone | Attached to the account, so they follow you everywhere on claude.ai. They do not reach Claude Code in Terminal. |
 
-## Skills in your repos (8)
+## Skills in your repos (10)
 
 Most start on their own when the work matches. To force one, type its name with a
 slash. Standing rule from the hub CLAUDE.md: copy a skill you need everywhere into
@@ -25,6 +25,8 @@ every repo, never install it as a plugin.
 |---|---|---|---|---|
 | `stop-slop` | Strips the tells out of writing: filler openers, adverbs, passive voice, binary contrasts, em dashes. Rewrites; it does not search. | `/stop-slop` | All 15 repos | [Hardik Pandya](https://github.com/hardikpandya/stop-slop) (MIT) |
 | `slop-scan` | Greps a repo's copy and reports every tell as file and line number. Finds the lines; stop-slop fixes them. | `/slop-scan` | All 15 repos | Yours, built 19 Aug 2026 |
+| `grill-me` | Interviews you about a plan or decision. Numbered questions one round at a time, each with a recommended answer, until nothing is left assumed. Claude looks the facts up; the decisions stay yours. | `/grill-me` | All 15 repos | [Matt Pocock](https://github.com/mattpocock/skills) (MIT) |
+| `grilling` | The interview engine `grill-me` hands to. Vendored beside it because either one alone resolves to nothing. | `grill-me` calls it | All 15 repos | [Matt Pocock](https://github.com/mattpocock/skills) (MIT) |
 | `i-have-adhd` | Reshapes the answer: next action first, numbered steps, no preamble, no recap, lists capped at five. Ends on "stop adhd mode". | `/i-have-adhd` | claude-code, job-hunting, kingtan-com-au | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) (MIT) |
 | `frontend-design` | Visual direction for new UI: palette, type pairing, layout, and the discipline to avoid templated defaults. Your one primary design skill. | `/frontend-design` | claude-code, kingtan-com-au | [Anthropic](https://github.com/anthropics/claude-plugins-official) |
 | `workspace-audit` | Six pass spring clean of the estate: repo map, CLAUDE.md clashes, duplicates, skills inventory, stale branches, clone health. | `/workspace-audit` | claude-code | Yours, first run 9 Aug 2026 |
@@ -32,8 +34,8 @@ every repo, never install it as a plugin.
 | `kingtan-portfolio-entry` | Eleven step intake for new work on kingtan.com.au: blurb voice, locked service tags, image pipeline, SEO pass, redirects, screenshot checks. | `/kingtan-portfolio-entry` | kingtan-com-au | Yours |
 | `tbo-a0-posters` | Turns a Bottle-O A0 brief workbook into InDesign Data Merge CSVs, then proofreads the finished PDF against the brief. | `/tbo-a0-posters` | metcash | Yours |
 
-**stop-slop is in all 15 repos** as of 12 September 2026. `metcash` and `vantage`
-were the last two and now carry it.
+**Four skills now sit in all 15 repos**: `stop-slop`, `slop-scan`, `grill-me` and
+`grilling`, all vendored on 12 September 2026.
 
 ## Plugins on the Mac (2)
 
@@ -43,7 +45,7 @@ on that machine. They do not exist in a web session. Check what is on there with
 
 | Plugin | What it does | Call it | By |
 |---|---|---|---|
-| `mattpocock-skills` | A bundle of engineering skills. The one you use is `grill-me`, which interrogates your thinking instead of agreeing with you. Also covers spec and ticket flows, TDD, code review, domain modelling. | `/mattpocock-skills:grill-me` | [Matt Pocock](https://github.com/mattpocock/skills) |
+| `mattpocock-skills` | 25 engineering skills: spec and ticket flows, TDD, code review, domain modelling, bug diagnosis, merge conflicts. This one never installs in a cloud session, for the reason in the notes below. `grill-me` now reaches you from your repo copy instead. | `/mattpocock-skills:<name>`, Mac only | [Matt Pocock](https://github.com/mattpocock/skills) |
 | `i-have-adhd` | The plugin version of the skill above. Adds a session hook that can switch the format on automatically, which a copied skill file cannot do. | `/i-have-adhd` | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) |
 
 ## Skills on claude.ai (9)
@@ -82,10 +84,20 @@ call them.
 
 ## Worth knowing
 
-- **Three repos default to a session branch, not a trunk.** `metcash`, `Business` and
-  `agents` were all created inside a Claude session and never got a `main`. `metcash`
-  has one now; `Business` and `agents` still have a single `claude/*` branch each.
-  Change the default under Settings, Branches on GitHub, per repo.
+- **Enabling a plugin does not install it.** `.claude/settings.json` asks for
+  `mattpocock-skills@claude-plugins-official` and that name is correct. The catch is
+  in the marketplace entry: it uses `"source": "url"`, so installing needs a second
+  clone on top of the marketplace fetch, and a fresh cloud container never runs that
+  clone. That, not the Mac-only rule, is why `/grill-me` answered "Unknown command".
+  Expect the same silence from any other `source: url` plugin.
+- **Three repos were born on a session branch.** `metcash`, `Business` and `agents`
+  each started inside a Claude session with no `main`. You gave `metcash` one and
+  switched its default over on 12 September. `Business` and `agents` still run on a
+  single `claude/*` branch each, which you chose to leave as it is.
+- **`personal` is your only public repo.** This file sits on its front page, where it
+  names your private repo names and your work. Nothing secret in it, and it was
+  already readable before, but move it to `claude-code` if you would rather it stayed
+  behind the wall.
 - **Two copies of the same skill had drifted apart.** The `kingtan-com-au` copy of
   `scan.py` carried a fix (`underbelly` on the not-an-adverb list) that the hub copy
   never received. Nothing flagged it. All 15 copies are now byte-identical; if you
