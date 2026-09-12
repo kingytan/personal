@@ -1,6 +1,6 @@
 # King's Claude Toolkit
 
-Every skill and plugin gathered so far, grouped by where each one actually loads.
+Every skill and plugin gathered so far, grouped by where each one loads.
 
 Bookmarkable version: https://claude.ai/code/artifact/49da29e0-84e9-4ed9-b3ab-4042ca11c7ea
 
@@ -18,13 +18,13 @@ Mac mini, and the claude.ai account.
 ## Skills in your repos (8)
 
 Most start on their own when the work matches. To force one, type its name with a
-slash. Standing rule from the hub CLAUDE.md: a skill needed everywhere gets copied
-into each repo, never installed as a plugin.
+slash. Standing rule from the hub CLAUDE.md: copy a skill you need everywhere into
+every repo, never install it as a plugin.
 
 | Skill | What it does | Call it | Lives in | By |
 |---|---|---|---|---|
 | `stop-slop` | Strips the tells out of writing: filler openers, adverbs, passive voice, binary contrasts, em dashes. Rewrites; it does not search. | `/stop-slop` | All 15 repos | [Hardik Pandya](https://github.com/hardikpandya/stop-slop) (MIT) |
-| `slop-scan` | Greps a repo's copy and reports every tell as file and line number. Finds the lines; stop-slop fixes them. | `/slop-scan` | claude-code, kingtan-com-au | Yours, built 19 Aug 2026 |
+| `slop-scan` | Greps a repo's copy and reports every tell as file and line number. Finds the lines; stop-slop fixes them. | `/slop-scan` | All 15 repos | Yours, built 19 Aug 2026 |
 | `i-have-adhd` | Reshapes the answer: next action first, numbered steps, no preamble, no recap, lists capped at five. Ends on "stop adhd mode". | `/i-have-adhd` | claude-code, job-hunting, kingtan-com-au | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) (MIT) |
 | `frontend-design` | Visual direction for new UI: palette, type pairing, layout, and the discipline to avoid templated defaults. Your one primary design skill. | `/frontend-design` | claude-code, kingtan-com-au | [Anthropic](https://github.com/anthropics/claude-plugins-official) |
 | `workspace-audit` | Six pass spring clean of the estate: repo map, CLAUDE.md clashes, duplicates, skills inventory, stale branches, clone health. | `/workspace-audit` | claude-code | Yours, first run 9 Aug 2026 |
@@ -49,7 +49,7 @@ on that machine. They do not exist in a web session. Check what is on there with
 ## Skills on claude.ai (9)
 
 Attached to your account. They follow you to the phone, the desktop app and web
-sessions. Nearly all start on their own; you rarely need to name them.
+sessions. Most start on their own. Naming one is the exception.
 
 | Skill | What it does | Call it | By |
 |---|---|---|---|
@@ -72,7 +72,7 @@ These reach outside the conversation into a real product.
 
 ## Runs without being asked (2 hooks)
 
-Hooks are set in a repo's `.claude/settings.json`. Claude Code runs them; you never
+Hooks live in a repo's `.claude/settings.json`. Claude Code runs them; you never
 call them.
 
 | Hook | When it fires | Where |
@@ -82,14 +82,19 @@ call them.
 
 ## Worth knowing
 
-- **metcash still points at the wrong default branch.** It was built entirely on
-  `claude/*` session branches and never had a trunk. A `main` branch now exists, but
-  the repo default is still `claude/asana-setup-ud8ewy`. Change it under Settings,
-  Branches on GitHub so new work starts from main.
-- **i-have-adhd sits in 3 repos, frontend-design in 2.** Both are useful more widely.
+- **Three repos default to a session branch, not a trunk.** `metcash`, `Business` and
+  `agents` were all created inside a Claude session and never got a `main`. `metcash`
+  has one now; `Business` and `agents` still have a single `claude/*` branch each.
+  Change the default under Settings, Branches on GitHub, per repo.
+- **Two copies of the same skill had drifted apart.** The `kingtan-com-au` copy of
+  `scan.py` carried a fix (`underbelly` on the not-an-adverb list) that the hub copy
+  never received. Nothing flagged it. All 15 copies are now byte-identical; if you
+  edit one, edit them all.
+- **i-have-adhd sits in 3 repos, frontend-design in 2.** Both would earn their place
+  in more of them.
 - **Installing is not loading.** A skill opens when you invoke it or when the work
   matches its description. Sitting in a folder does nothing on its own.
-- **`ui-ux-pro-max` was deleted** on 9 August 2026, to keep one primary design skill
+- **You deleted `ui-ux-pro-max`** on 9 August 2026, to keep one primary design skill
   and stop two competing for the same jobs. Still recoverable from the git history
   of `kingytan/claude-code`.
 
